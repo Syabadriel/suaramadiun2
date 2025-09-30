@@ -6,13 +6,13 @@ import 'package:cached_network_image/cached_network_image.dart';
 class SemuaBeritaPage extends StatefulWidget {
   final List<Map<String, dynamic>> instagramPosts;
   final List<Map<String, dynamic>> kabarWargaPosts;
-  final List<Map<String, dynamic>> MadiunTodayPosts;
+  final List<Map<String, dynamic>> madiunTodayPosts;
 
   const SemuaBeritaPage({
     Key? key,
     required this.instagramPosts,
     required this.kabarWargaPosts,
-    required this.MadiunTodayPosts,
+    required this.madiunTodayPosts,
   }) : super(key: key);
 
   @override
@@ -91,14 +91,13 @@ class _SemuaBeritaPageState extends State<SemuaBeritaPage>
                         _currentPageKabarWarga = page;
                       });
                     }),
-                _buildBeritaList(
-                    widget.instagramPosts, 'Instagram', _currentPageInstagram,
-                    onPageChanged: (page) {
+                _buildBeritaList(widget.instagramPosts, 'Instagram',
+                    _currentPageInstagram, onPageChanged: (page) {
                       setState(() {
                         _currentPageInstagram = page;
                       });
                     }),
-                _buildBeritaList(widget.MadiunTodayPosts, 'madiuntoday.id',
+                _buildBeritaList(widget.madiunTodayPosts, 'madiuntoday.id',
                     _currentPageMadiunToday, onPageChanged: (page) {
                       setState(() {
                         _currentPageMadiunToday = page;
@@ -141,98 +140,7 @@ class _SemuaBeritaPageState extends State<SemuaBeritaPage>
               itemCount: paginatedPosts.length,
               itemBuilder: (context, index) {
                 final post = paginatedPosts[index];
-                return Card(
-                  elevation: 3,
-                  color: Colors.white.withOpacity(0.9),
-                  shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(16)),
-                  margin: const EdgeInsets.symmetric(vertical: 6),
-                  child: InkWell(
-                    borderRadius: BorderRadius.circular(16),
-                    onTap: () async {
-                      final url = post['url'];
-                      if (url != null && url.toString().isNotEmpty) {
-                        final uri = Uri.parse(url);
-                        if (await canLaunchUrl(uri)) {
-                          await launchUrl(uri,
-                              mode: LaunchMode.externalApplication);
-                        }
-                      }
-                    },
-                    child: Row(
-                      children: [
-                        ClipRRect(
-                          borderRadius: BorderRadius.circular(16),
-                          child: CachedNetworkImage(
-                            imageUrl: post['image'] ?? '',
-                            width: 80,
-                            height: 80,
-                            fit: BoxFit.cover,
-                            placeholder: (context, url) => Container(
-                              width: 80,
-                              height: 80,
-                              color: Colors.grey.shade200,
-                              child: const Center(
-                                child: CircularProgressIndicator(strokeWidth: 2),
-                              ),
-                            ),
-                            errorWidget: (context, url, error) =>
-                            const Icon(Icons.broken_image, size: 40),
-                          ),
-                        ),
-                        const SizedBox(width: 12),
-                        Expanded(
-                          child: Column(
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            children: [
-                              Text(
-                                post['title'] ?? '',
-                                maxLines: 2,
-                                overflow: TextOverflow.ellipsis,
-                                style: const TextStyle(
-                                  fontWeight: FontWeight.bold,
-                                  fontSize: 16,
-                                ),
-                              ),
-                              const SizedBox(height: 4),
-                              Row(
-                                children: [
-                                  const Icon(Icons.public,
-                                      size: 14, color: Colors.grey),
-                                  const SizedBox(width: 4),
-                                  Text(
-                                    label,
-                                    style: const TextStyle(
-                                        color: Colors.grey, fontSize: 12),
-                                  ),
-                                ],
-                              ),
-                            ],
-                          ),
-                        ),
-                        IconButton(
-                          icon: const Icon(Icons.bookmark_border,
-                              color: Colors.grey),
-                          onPressed: () {
-                            ScaffoldMessenger.of(context).showSnackBar(
-                              const SnackBar(
-                                  content: Text('Disimpan ke bookmark')),
-                            );
-                          },
-                        ),
-                        IconButton(
-                          icon: const Icon(Icons.share, color: Colors.grey),
-                          onPressed: () {
-                            final url = post['url'] ?? '';
-                            if (url.isNotEmpty) {
-                              Share.share(url);
-                            }
-                          },
-                        ),
-                      ],
-                    ),
-                  ),
-                );
+                return BeritaCard(post: post, label: label);
               },
             ),
           ),
@@ -271,6 +179,126 @@ class _SemuaBeritaPageState extends State<SemuaBeritaPage>
             ),
           );
         }),
+      ),
+    );
+  }
+}
+
+class BeritaCard extends StatelessWidget {
+  final Map<String, dynamic> post;
+  final String label;
+
+  const BeritaCard({Key? key, required this.post, required this.label})
+      : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    final imageUrl = post['image'] ?? '';
+
+    return Card(
+      elevation: 3,
+      color: Colors.white,
+      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
+      margin: const EdgeInsets.symmetric(vertical: 6, horizontal: 8),
+      child: InkWell(
+        borderRadius: BorderRadius.circular(16),
+        onTap: () async {
+          final url = post['url'];
+          if (url != null && url.toString().isNotEmpty) {
+            final uri = Uri.parse(url);
+            if (await canLaunchUrl(uri)) {
+              await launchUrl(uri, mode: LaunchMode.externalApplication);
+            }
+          }
+        },
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            // Bagian Gambar
+            ClipRRect(
+              borderRadius:
+              const BorderRadius.vertical(top: Radius.circular(16)),
+              child: imageUrl.isNotEmpty
+                  ? CachedNetworkImage(
+                imageUrl: imageUrl,
+                width: double.infinity,
+                height: 160,
+                fit: BoxFit.cover,
+                placeholder: (context, url) => Container(
+                  width: double.infinity,
+                  height: 160,
+                  color: Colors.grey.shade200,
+                  child: const Center(
+                    child: CircularProgressIndicator(strokeWidth: 2),
+                  ),
+                ),
+                errorWidget: (context, url, error) => Container(
+                  width: double.infinity,
+                  height: 160,
+                  color: Colors.grey.shade300,
+                  child: const Icon(Icons.broken_image, size: 50),
+                ),
+              )
+                  : Container(
+                width: double.infinity,
+                height: 160,
+                color: Colors.grey.shade300,
+                child: const Icon(Icons.image_not_supported,
+                    size: 50, color: Colors.grey),
+              ),
+            ),
+
+            // Bagian Teks
+            Padding(
+              padding: const EdgeInsets.all(12.0),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Text(
+                    post['title'] ?? '',
+                    maxLines: 2,
+                    overflow: TextOverflow.ellipsis,
+                    style: const TextStyle(
+                      fontWeight: FontWeight.bold,
+                      fontSize: 15,
+                    ),
+                  ),
+                  const SizedBox(height: 6),
+                  Row(
+                    children: [
+                      const Icon(Icons.public, size: 14, color: Colors.grey),
+                      const SizedBox(width: 4),
+                      Text(
+                        label,
+                        style:
+                        const TextStyle(color: Colors.grey, fontSize: 12),
+                      ),
+                      const Spacer(),
+                      IconButton(
+                        icon: const Icon(Icons.bookmark_border,
+                            color: Colors.grey),
+                        onPressed: () {
+                          ScaffoldMessenger.of(context).showSnackBar(
+                            const SnackBar(content: Text('Disimpan ke bookmark')),
+                          );
+                        },
+                      ),
+                      IconButton(
+                        icon: const Icon(Icons.share, color: Colors.grey),
+                        onPressed: () {
+                          final url = post['url'] ?? '';
+                          if (url.isNotEmpty) {
+                            Share.share(url);
+                          }
+                        },
+                      ),
+                    ],
+                  ),
+                ],
+              ),
+            ),
+          ],
+        ),
       ),
     );
   }
