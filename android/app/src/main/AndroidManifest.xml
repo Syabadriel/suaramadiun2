@@ -1,23 +1,33 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android">
 
-    <uses-permission android:name="android.permission.FOREGROUND_SERVICE" />
-    <uses-permission android:name="android.permission.INTERNET" />
+    <uses-permission android:name="android.permission.INTERNET"/>
+    <uses-permission android:name="android.permission.FOREGROUND_SERVICE"/>
+    <uses-permission android:name="android.permission.FOREGROUND_SERVICE_MEDIA_PLAYBACK"/>
+    <uses-permission android:name="android.permission.POST_NOTIFICATIONS"/>
+    <uses-permission android:name="android.permission.WAKE_LOCK" />
+
 
     <application
         android:label="Radio Suara Madiun"
-        android:name="${applicationName}"
         android:icon="@mipmap/ic_launcher">
 
-        <!-- Menambahkan service untuk AudioService -->
-        <!-- <service
+        <service
             android:name="com.ryanheise.audioservice.AudioService"
+            android:foregroundServiceType="mediaPlayback"
             android:exported="false">
             <intent-filter>
-                <action android:name="com.ryanheise.audioservice.ACTION_MEDIA_PLAYER" />
+                <action android:name="android.intent.action.MEDIA_BUTTON" />
+                <action android:name="android.media.browse.MediaBrowserService" />
             </intent-filter>
-        </service> -->
+        </service>
 
-        <!-- Activity utama aplikasi -->
+        <receiver android:name="com.ryanheise.audioservice.MediaButtonReceiver"
+            android:exported="true">
+            <intent-filter>
+                <action android:name="android.intent.action.MEDIA_BUTTON" />
+            </intent-filter>
+        </receiver>
+
         <activity
             android:name=".MainActivity"
             android:exported="true"
@@ -26,10 +36,10 @@
             android:configChanges="orientation|keyboardHidden|keyboard|screenSize|smallestScreenSize|locale|layoutDirection|fontScale|screenLayout|density|uiMode"
             android:hardwareAccelerated="true"
             android:windowSoftInputMode="adjustResize">
-            
+
             <meta-data
                 android:name="io.flutter.embedding.android.NormalTheme"
-                android:resource="@style/NormalTheme" />
+                android:resource="@style/NormalTheme"/>
 
             <intent-filter>
                 <action android:name="android.intent.action.MAIN"/>
@@ -37,10 +47,10 @@
             </intent-filter>
         </activity>
 
-        <!-- Jangan hapus meta-data ini, digunakan oleh Flutter untuk registrasi plugin -->
         <meta-data
             android:name="flutterEmbedding"
-            android:value="2" />
+            android:value="2"/>
 
     </application>
 </manifest>
+

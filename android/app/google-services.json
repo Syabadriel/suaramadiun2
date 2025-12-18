@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "338320446760",
+    "project_id": "suaramadiun-f2d01",
+    "storage_bucket": "suaramadiun-f2d01.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:338320446760:android:23913746cd104db8416c1d",
+        "android_client_info": {
+          "package_name": "com.kominfo.lppl_93fm_suara_madiun"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyA2Osgx43M49PbLYWsWYVEtuCZ8gbOJD_0"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

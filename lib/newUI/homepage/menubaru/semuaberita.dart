@@ -66,13 +66,13 @@ class _SemuaBeritaPageState extends State<SemuaBeritaPage>
             ),
             child: TabBar(
               indicator: BoxDecoration(
-                color: const Color.fromARGB(15, 226, 156, 50).withOpacity(0.2),
+                color: const Color.fromARGB(15, 226, 156, 50).withValues(alpha: 0.2),
                 borderRadius: BorderRadius.circular(16),
               ),
               indicatorSize: TabBarIndicatorSize.tab,
               indicatorPadding:
               const EdgeInsets.symmetric(horizontal: 8, vertical: 6),
-              dividerColor: Colors.white.withOpacity(0.0),
+              dividerColor: Colors.white.withValues(alpha: 0.0),
               labelColor: Colors.white,
               unselectedLabelColor: Colors.white60,
               tabs: const [
@@ -172,7 +172,7 @@ class _SemuaBeritaPageState extends State<SemuaBeritaPage>
                 style: TextStyle(
                   color: currentPage == page
                       ? Colors.white
-                      : Colors.black.withOpacity(0.6),
+                      : Colors.black.withValues(alpha: 0.6),
                   fontWeight: FontWeight.bold,
                 ),
               ),
